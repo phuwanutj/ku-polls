@@ -45,6 +45,42 @@ class QuestionModelTests(TestCase):
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
 
+    def test_is_published_with_already_ended_question(self):
+        """
+        is_published() returns True for questions whose end_date
+        is already pass.
+        """
+        time = timezone.now() - datetime.timedelta(days=5)
+        old_question = Question(end_date=time)
+        self.assertEqual(old_question.is_published(), True)
+
+    def test_is_published_with_not_ended_question(self):
+        """
+        is_published() returns True for questions whose end_date
+        is not yet pass.
+        """
+        time = timezone.now() + datetime.timedelta(days=10)
+        question = Question(end_date=time)
+        self.assertEqual(question.is_published(), False)
+
+    def test_can_vote_with_ended_question(self):
+        """
+        can_vote() returns False for questions whose end_date
+        is already pass.
+        """
+        time = timezone.now() - datetime.timedelta(days=5)
+        old_question = Question(end_date=time)
+        self.assertEqual(old_question.can_vote(), False)
+
+    def test_can_vote_with_not_ended_question(self):
+        """
+        can_vote() returns True for questions whose end_date
+        is not yet pass.
+        """
+        time = timezone.now() + datetime.timedelta(days=10)
+        question = Question(end_date=time)
+        self.assertEqual(question.can_vote(), True)
+
 
 class QuestionIndexViewTests(TestCase):
 

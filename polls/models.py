@@ -19,6 +19,18 @@ class Question(models.Model):
     was_published_recently.boolean = True
     was_published_recently.short_description = 'Published recently?'
 
+    def is_published(self):
+        now = timezone.now()
+        if now <= self.end_date:
+            return False
+        else:
+            return True
+
+    def can_vote(self):
+        if self.is_published():
+            return False
+        else: return True
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
