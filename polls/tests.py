@@ -63,6 +63,14 @@ class QuestionModelTests(TestCase):
         question = Question(end_date=time)
         self.assertEqual(question.is_published(), False)
 
+    def test_is_published_with_no_end_date_question(self):
+        """
+        is_published() returns False for questions that had no end date.
+        """
+        time = timezone.now() - datetime.timedelta(days=5)
+        question = Question(pub_date=time)
+        self.assertEqual(question.is_published(), False)
+
     def test_can_vote_with_ended_question(self):
         """
         can_vote() returns False for questions whose end_date
@@ -79,6 +87,14 @@ class QuestionModelTests(TestCase):
         """
         time = timezone.now() + datetime.timedelta(days=10)
         question = Question(end_date=time)
+        self.assertEqual(question.can_vote(), True)
+
+    def test_can_vote_with_not_ended_question(self):
+        """
+        can_vote() returns True for questions that had no end date.
+        """
+        time = timezone.now() + datetime.timedelta(days=10)
+        question = Question(pub_date=time)
         self.assertEqual(question.can_vote(), True)
 
 
