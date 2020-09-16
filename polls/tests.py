@@ -51,25 +51,25 @@ class QuestionModelTests(TestCase):
         is already pass.
         """
         time = timezone.now() - datetime.timedelta(days=5)
-        old_question = Question(end_date=time)
+        old_question = Question(pub_date=time)
         self.assertEqual(old_question.is_published(), True)
 
-    def test_is_published_with_not_ended_question(self):
+    def test_is_published_with_not_yet_published_question(self):
         """
-        is_published() returns True for questions whose end_date
+        is_published() returns False for questions whose pub_date
         is not yet pass.
         """
         time = timezone.now() + datetime.timedelta(days=10)
-        question = Question(end_date=time)
+        question = Question(pub_date=time)
         self.assertEqual(question.is_published(), False)
 
-    def test_is_published_with_no_end_date_question(self):
+    def test_is_published_with_already_published_question(self):
         """
-        is_published() returns False for questions that had no end date.
+        is_published() returns True for questions that had already published.
         """
         time = timezone.now() - datetime.timedelta(days=5)
         question = Question(pub_date=time)
-        self.assertEqual(question.is_published(), False)
+        self.assertEqual(question.is_published(), True)
 
     def test_can_vote_with_ended_question(self):
         """
@@ -86,16 +86,16 @@ class QuestionModelTests(TestCase):
         is not yet pass.
         """
         time = timezone.now() + datetime.timedelta(days=10)
-        question = Question(end_date=time)
+        question = Question(pub_date=time-datetime.timedelta(days=10), end_date=time)
         self.assertEqual(question.can_vote(), True)
 
-    def test_can_vote_with_not_ended_question(self):
+    def test_can_vote_with_not_yet_published_question(self):
         """
-        can_vote() returns True for questions that had no end date.
+        can_vote() returns False for questions that had not published yet.
         """
         time = timezone.now() + datetime.timedelta(days=10)
         question = Question(pub_date=time)
-        self.assertEqual(question.can_vote(), True)
+        self.assertEqual(question.can_vote(), False)
 
 
 class QuestionIndexViewTests(TestCase):
@@ -145,7 +145,7 @@ class QuestionIndexViewTests(TestCase):
         create_question(question_text="Past question 1.", days=-30)
         create_question(question_text="Past question 2.", days=-5)
         response = self.client.get(reverse('polls:index'))
-        self.assertQuerysetEqual(response.context['latest_question_list'], ['<Question: Past question 2.>', '<Question: Past question 1.>'])
+        self.assertQuerysetEqual(response.context['latest_question_list'], ['<Question: Past question 1.>', '<Question: Past question 2.>'])
 
 
 class QuestionDetailViewTests(TestCase):
@@ -169,4 +169,3 @@ class QuestionDetailViewTests(TestCase):
         url = reverse('polls:detail', args=(past_question.id,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
-
