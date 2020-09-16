@@ -32,7 +32,7 @@ class ResultsView(generic.DetailView):
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     if not question.can_vote():
-        return HttpResponseRedirect(reverse('polls:index'), messages.error(request, "Poll is already ended."))
+        return HttpResponseRedirect(reverse('polls:index'), messages.error(request, "You can't vote on this poll because this poll is already ended."))
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
