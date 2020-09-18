@@ -21,7 +21,7 @@ class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
 
-    def get(self, request, **kwargs):
+    def get(self, request, *args, **kwargs):
         try:
             question = Question.objects.get(pk=kwargs['pk'])
             if not question.can_vote():
@@ -29,7 +29,7 @@ class DetailView(generic.DetailView):
         except ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('polls:index'), messages.error(request, "Poll does not exist."))
         self.object = self.get_object()
-        return self.render_to_response(self.get_context_data(object=self.get_object()))
+        return render(request, context=self.get_context_data(object=self.get_object()), template_name='polls/detail.html')
 
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
