@@ -1,9 +1,8 @@
-#cd kuPolls#!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
 
-#python
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kuPolls.settings')

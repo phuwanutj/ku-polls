@@ -1,3 +1,4 @@
+"""URLs for index page, detail page, and result page."""
 from django.urls import path
 from . import views
 

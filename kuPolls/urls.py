@@ -1,4 +1,4 @@
-"""kuPolls URL Configuration
+"""kuPolls URL Configuration.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -19,6 +19,6 @@ from . import view
 
 urlpatterns = [
     path('', view.index, name="main_index_view"),
-    path('polls/',include('polls.urls')),
+    path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
 ]
