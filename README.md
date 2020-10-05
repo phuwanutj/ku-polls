@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.com/phuwanutj/ku-polls.svg?branch=master)](https://travis-ci.com/phuwanutj/ku-polls)
+[![Build Status](https://travis-ci.com/phuwanutj/ku-polls.svg?branch=master)](https://travis-ci.com/phuwanutj/ku-polls)<br/>
+[![codecov](https://codecov.io/gh/phuwanutj/ku-polls/branch/master/graph/badge.svg)](https://codecov.io/gh/phuwanutj/ku-polls)
 
 # Kasetsart University Polls.
 
