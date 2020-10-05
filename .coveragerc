@@ -6,6 +6,6 @@ cover_pylib = False
 
 omit =
     */site-packages/*
-    kuPolls\*
+    kuPolls/*
     polls/migrations/*
     polls\__init__.py
