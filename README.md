@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/phuwanutj/ku-polls.svg?branch=master)](https://travis-ci.com/phuwanutj/ku-polls)
+
 # Kasetsart University Polls.
 
 Django web application for conducting polls.
