@@ -1,0 +1,11 @@
+[run]
+
+branch = True
+
+cover_pylib = False
+
+omit =
+    */site-packages/*
+    kuPolls\*
+    polls/migrations/*
+    polls\__init__.py
