@@ -16,7 +16,11 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
-        """Get the query set of question."""
+        """
+        Get the queryset of question.
+
+        :return question's queryset.
+        """
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
 
 
@@ -27,7 +31,15 @@ class DetailView(generic.DetailView):
     template_name = 'polls/detail.html'
 
     def get(self, request, *args, **kwargs):
-        """If question does not exist or can't be vote, redirect to index page."""
+        """
+        If question does not exist or can't be vote, redirect to index page.
+
+        :param request is the HttpRequest object.
+        :param *args is the argument.
+        :param **kwargs is the keyword argument.
+        :return redirect to index page if the question can't be vote or does not exist,
+                redirect to the question page otherwise.
+        """
         try:
             question = Question.objects.get(pk=kwargs['pk'])
             if not question.can_vote():
@@ -42,7 +54,11 @@ class DetailView(generic.DetailView):
         return render(request, context=context, template_name=template_name)
 
     def get_queryset(self):
-        """Get the query set of question."""
+        """
+        Get the queryset of question.
+
+        :return question's queryset.
+        """
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
 
 
@@ -54,7 +70,15 @@ class ResultsView(generic.DetailView):
 
 
 def vote(request, question_id):
-    """Submit the vote for the poll."""
+    """
+    Submit the vote for the poll.
+
+    :param request is the HttpRequest object.
+    :param question_id is the id of the question.
+    :return redirect to index page if question can't be voted,
+            redirect to the same page with an error message if the choice is not selected,
+            redirect to the results page otherwise.
+    """
     question = get_object_or_404(Question, pk=question_id)
     if not question.can_vote():
         error = "You can't vote on this poll because this poll is already ended."

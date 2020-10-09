@@ -13,11 +13,19 @@ class Question(models.Model):
     end_date = models.DateTimeField("date ended", default=None, null=True)
 
     def __str__(self):
-        """Return question's text."""
+        """
+        Return question's text.
+
+        :return text of the question.
+        """
         return self.question_text
 
     def was_published_recently(self):
-        """Check whether this poll was published recently."""
+        """
+        Check whether this poll was published recently.
+
+        :return True if the published date is less than 1 day from now, False otherwise.
+        """
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
     was_published_recently.admin_order_field = 'pub_date'
@@ -25,14 +33,22 @@ class Question(models.Model):
     was_published_recently.short_description = 'Published recently?'
 
     def is_published(self):
-        """Check whether this poll is published."""
+        """
+        Check whether this poll is published.
+
+        :return True if the question is already published, False otherwise.
+        """
         now = timezone.now()
         if self.pub_date <= now:
             return True
         return False
 
     def can_vote(self):
-        """Check whether user can vote on this poll."""
+        """
+        Check whether user can vote on this poll.
+
+        :return True if the question can be voted, False otherwise.
+        """
         now = timezone.now()
         if (self.end_date is None or now <= self.end_date) and self.is_published():
             return True
@@ -47,5 +63,9 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0)
 
     def __str__(self):
-        """Return choice's text."""
+        """
+        Return choice's text.
+
+        :return text of the choice.
+        """
         return self.choice_text
