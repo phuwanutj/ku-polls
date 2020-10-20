@@ -1,7 +1,7 @@
 """Views for index page, detail page, and result page."""
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Question, Choice
+from .models import Question, Choice, Vote
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -69,6 +69,7 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
+
 @login_required()
 def vote(request, question_id):
     """
@@ -80,6 +81,7 @@ def vote(request, question_id):
             redirect to the same page with an error message if the choice is not selected,
             redirect to the results page otherwise.
     """
+    user = request.user
     question = get_object_or_404(Question, pk=question_id)
     if not question.can_vote():
         error = "You can't vote on this poll because this poll is already ended."
@@ -92,6 +94,8 @@ def vote(request, question_id):
             'error_message': "You didn't select a choice.",
         })
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
+        Vote.objects.update_or_create(user=user, question=question, defaults={'selected_choice': selected_choice})
+        for choice in question.choice_set.all():
+            choice.votes = Vote.objects.filter(question=question).filter(selected_choice=choice).count()
+            choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))

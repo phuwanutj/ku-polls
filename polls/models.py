@@ -1,6 +1,6 @@
 """Question and Choice for polls app."""
 import datetime
-
+import django.contrib.auth.models
 from django.db import models
 from django.utils import timezone
 
@@ -69,3 +69,13 @@ class Choice(models.Model):
         :return text of the choice.
         """
         return self.choice_text
+
+
+class Vote(models.Model):
+
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    selected_choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    user = models.ForeignKey(django.contrib.auth.models.User,null=True,blank=True,on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('question','user'),)
