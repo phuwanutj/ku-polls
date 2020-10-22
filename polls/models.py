@@ -76,6 +76,3 @@ class Vote(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     selected_choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     user = models.ForeignKey(django.contrib.auth.models.User,null=True,blank=True,on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = (('question','user'),)
