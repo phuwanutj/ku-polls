@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
+from django.contrib.auth.models import User
 import logging
 
 log = logging.getLogger("polls")
@@ -31,9 +32,8 @@ def get_client_ip(request):
 @receiver(user_logged_in)
 def update_choice_login(request, **kwargs):
     """Update your last vote when login."""
-    username = request.user
     for question in Question.objects.all():
-        question.last_vote = str(username.vote_set.get(question=question).selected_choice)
+        question.last_vote = str(request.user.vote_set.get(question=question).selected_choice)
         question.save()
 
 
@@ -152,6 +152,9 @@ def vote(request, question_id):
         for choice in question.choice_set.all():
             choice.votes = Vote.objects.filter(question=question).filter(selected_choice=choice).count()
             choice.save()
+        for question in Question.objects.all():
+            question.last_vote = str(request.user.vote_set.get(question=question).selected_choice)
+            question.save()
         date = datetime.now()
         log = logging.getLogger("polls")
         log.info("User: %s, Poll's ID: %d, Date: %s.", user, question_id, str(date))
