@@ -29,6 +29,15 @@ def get_client_ip(request):
 
 
 @receiver(user_logged_in)
+def update_choice_login(request, **kwargs):
+    """Update your last vote when login."""
+    username = request.user
+    for question in Question.objects.all():
+        question.last_vote = str(username.vote_set.get(question=question).selected_choice)
+        question.save()
+
+
+@receiver(user_logged_in)
 def log_user_logged_in(sender, request, user, **kwargs):
     """Log when user login."""
 
@@ -41,7 +50,7 @@ def log_user_logged_in(sender, request, user, **kwargs):
 def log_user_logged_out(sender, request, user, **kwargs):
     """Log when user logout."""
 
-    ip = request.META.get('REMOTE_ADDR')
+    ip = get_client_ip(request)
     date = datetime.now()
     log.info('Logout user: %s , IP: %s , Date: %s', user, ip, str(date))
 
@@ -50,7 +59,7 @@ def log_user_logged_out(sender, request, user, **kwargs):
 def log_user_login_failed(sender, request, credentials, **kwargs):
     """Log when user fail to login."""
 
-    ip = request.META.get('REMOTE_ADDR')
+    ip = get_client_ip(request)
     date = datetime.now()
     log.warning('Login user(failed): %s , IP: %s , Date: %s', credentials['username'], ip, str(date))
 
