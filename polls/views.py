@@ -12,6 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 import logging
 
 log = logging.getLogger("polls")
@@ -79,7 +80,7 @@ class IndexView(generic.ListView):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
 
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin,generic.DetailView):
     """View for detail page."""
 
     model = Question
@@ -117,7 +118,7 @@ class DetailView(generic.DetailView):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
 
 
-class ResultsView(generic.DetailView):
+class ResultsView(LoginRequiredMixin,generic.DetailView):
     """View for result page."""
 
     model = Question

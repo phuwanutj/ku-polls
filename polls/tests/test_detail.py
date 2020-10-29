@@ -1,6 +1,7 @@
 """Test case for DetailView."""
 import datetime
-
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
@@ -15,6 +16,14 @@ def create_question(question_text, days):
 
 class QuestionDetailViewTests(TestCase):
     """Tests for DetailView."""
+
+    def setUp(self):
+        User = get_user_model()
+        user = User.objects.create_user("John", "john@gmail.com", "12345")
+        user.first_name = 'John'
+        user.last_name = "Davidson"
+        user.save()
+        self.client.login(username="John", password="12345")
 
     def test_future_question(self):
         """The detail view of a question with a pub_date in the future returns a 302 status code."""

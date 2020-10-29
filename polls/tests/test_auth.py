@@ -17,14 +17,16 @@ def create_question(question_text, days):
 class AuthenticationTests(TestCase):
     """Tests for DetailView."""
 
-    def test_authenticate_user(self):
-        """Test if the user already login."""
-
+    def setUp(self):
         User = get_user_model()
         user = User.objects.create_user("John", "john@gmail.com", "12345")
         user.first_name = 'John'
         user.last_name = "Davidson"
         user.save()
+
+    def test_authenticate_user(self):
+        """Test if the user already login."""
+
         self.client.login(username="John", password="12345")
         url = reverse("polls:index")
         response = self.client.get(url)
@@ -34,11 +36,6 @@ class AuthenticationTests(TestCase):
     def test_unauthenticate_user(self):
         """Test if the user does not login."""
 
-        User = get_user_model()
-        user = User.objects.create_user("John", "john@gmail.com", "12345")
-        user.first_name = 'John'
-        user.last_name = "Davidson"
-        user.save()
         url = reverse("polls:index")
         response = self.client.get(url)
         self.assertNotContains(response, "John")
