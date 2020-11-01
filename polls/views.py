@@ -156,12 +156,12 @@ def vote(request, question_id):
         for choice in question.choice_set.all():
             choice.votes = Vote.objects.filter(question=question).filter(selected_choice=choice).count()
             choice.save()
-    for question in Question.objects.all():
-        try:
-            question.last_vote = str(request.user.vote_set.get(question=question).selected_choice)
-            question.save()
-        except(Vote.DoesNotExist):
-            question.last_vote = None
+        for question in Question.objects.all():
+            try:
+                question.last_vote = str(request.user.vote_set.get(question=question).selected_choice)
+                question.save()
+            except(Vote.DoesNotExist):
+                question.last_vote = None
         date = datetime.now()
         log = logging.getLogger("polls")
         log.info("User: %s, Poll's ID: %d, Date: %s.", user, question_id, str(date))
