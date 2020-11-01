@@ -34,8 +34,11 @@ def get_client_ip(request):
 def update_choice_login(request, **kwargs):
     """Update your last vote when login."""
     for question in Question.objects.all():
-        question.last_vote = str(request.user.vote_set.get(question=question).selected_choice)
-        question.save()
+        try:
+            question.last_vote = str(request.user.vote_set.get(question=question).selected_choice)
+            question.save()
+        except(Vote.DoesNotExist):
+            pass
 
 
 @receiver(user_logged_in)
